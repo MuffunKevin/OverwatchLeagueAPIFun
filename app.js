@@ -5,7 +5,7 @@ var options = {
   path: '/en-us/api/live-match?locale=en-us'
 };
 
-setInterval(loadScore, 5000);
+setInterval(loadScore, 300000);
 
 function loadScore() {
   var req = http.get(options, function(res) {
