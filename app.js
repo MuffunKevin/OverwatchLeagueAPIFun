@@ -5,7 +5,15 @@ var options = {
   path: '/en-us/api/live-match?locale=en-us'
 };
 
+loadScore();
 setInterval(loadScore, 300000); //fetch every 5 min.
+
+var lastResult = {
+  Team1 : "",
+  Score1: 0,
+  Team2 : "",
+  Score2: 0
+};
 
 function loadScore() {
   var req = http.get(options, function(res) {
@@ -23,7 +31,18 @@ function loadScore() {
       // ...and/or process the entire body here.
   
       var resultAsJson = JSON.parse(body);
-      console.log(resultAsJson.data.liveMatch.competitors[0].name + " " + resultAsJson.data.liveMatch.scores[0].value + " " + resultAsJson.data.liveMatch.competitors[1].name + " " + resultAsJson.data.liveMatch.scores[1].value);
+
+      if(lastResult.Team1 == '' ||
+        (lastResult.Team1 == resultAsJson.data.liveMatch.competitors[0].name &&
+        lastResult.Score1 != resultAsJson.data.liveMatch.scores[0].value)) {
+          
+          console.log(resultAsJson.data.liveMatch.competitors[0].name + " " + resultAsJson.data.liveMatch.scores[0].value + " " + resultAsJson.data.liveMatch.competitors[1].name + " " + resultAsJson.data.liveMatch.scores[1].value);
+          
+          lastResult.Team1 = resultAsJson.data.liveMatch.competitors[0].name;
+          lastResult.Score1 = resultAsJson.data.liveMatch.scores[0].value;
+          lastResult.Team2 = resultAsJson.data.liveMatch.competitors[1].name;
+          lastResult.Score2 = resultAsJson.data.liveMatch.scores[1].value
+      }
     })
   });
   
